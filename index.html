@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>DVM Public School - 2026-27</title>
+
+<!-- Used only for automatic Email PDF generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+<style>
+
+/* =========================================================
+   BASIC
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 15px;
+    background: #eef2f7;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #111827;
+}
+
+.main-container {
+    width: 100%;
+    max-width: 1900px;
+    margin: auto;
+}
+
+.sheet {
+    width: 100%;
+    background: #ffffff;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+}
+
+
+/* =========================================================
+   SCHOOL HEADER
+========================================================= */
+
+.school-header {
+    text-align: center;
+    border-bottom: 3px solid #0d6efd;
+    padding-bottom: 15px;
+}
+
+.school-name {
+    font-size: clamp(30px, 5vw, 50px);
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.school-address {
+    margin-top: 6px;
+    font-size: clamp(13px, 2vw, 18px);
+    font-weight: 700;
+}
+
+.exam-title {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 9px 28px;
+    border: 2px solid #0d6efd;
+    border-radius: 30px;
+    background: #e7f1ff;
+    color: #084298;
+    font-size: clamp(15px, 2vw, 22px);
+    font-weight: 800;
+}
+
+.meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    padding: 0 5px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 20px;
+    border: 1px solid #111;
+}
+
+.marks-table {
+    width: 100%;
+    min-width: 1600px;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.marks-table th,
+.marks-table td {
+    border: 1px solid #111;
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.roll-header {
+    width: 80px;
+    background: #dbeafe;
+}
+
+.subject-header {
+    height: 42px;
+    background: #dbeafe;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.sub-header {
+    height: 32px;
+    background: #f3f4f6;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   OPTIONAL SUBJECTS
+========================================================= */
+
+.optional-header,
+.optional-cell {
+    background: #fff3cd !important;
+}
+
+
+/* =========================================================
+   TOTAL
+========================================================= */
+
+.total-cell {
+    background: #e8f5e9 !important;
+}
+
+.roll-number {
+    height: 43px;
+    background: #f8f9fa;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.marks-input {
+    width: 100%;
+    height: 43px;
+    border: none;
+    outline: none;
+    background: transparent;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.marks-input:focus {
+    background: #e7f1ff;
+    box-shadow: inset 0 0 0 2px #0d6efd;
+}
+
+.total-input {
+    width: 100%;
+    height: 43px;
+    border: none;
+    outline: none;
+    text-align: center;
+    background: #e8f5e9;
+    color: #146c43;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   BUTTON AREA
+========================================================= */
+
+.control-area {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.student-counter {
+    font-size: 16px;
+    font-weight: 800;
+    color: #374151;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.button {
+    border: none;
+    padding: 11px 19px;
+    border-radius: 7px;
+    color: white;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.add-button {
+    background: #0d6efd;
+}
+
+.pdf-button {
+    background: #198754;
+}
+
+.email-button {
+    background: #dc3545;
+}
+
+.button:hover {
+    opacity: 0.9;
+}
+
+.button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+#statusMessage {
+    margin-top: 12px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    body {
+        padding: 5px;
+    }
+
+    .sheet {
+        padding: 10px;
+        border-radius: 7px;
+    }
+
+    .school-name {
+        font-size: 28px;
+        letter-spacing: 1px;
+    }
+
+    .school-address {
+        font-size: 12px;
+    }
+
+    .exam-title {
+        font-size: 14px;
+        padding: 7px 15px;
+    }
+
+    .meta-row {
+        font-size: 12px;
+    }
+
+    .control-area {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .button {
+        width: 100%;
+    }
+
+    #statusMessage {
+        text-align: center;
+    }
+}
+
+
+/* =========================================================
+   PRINT / SAVE AS PDF
+   THIS FIXES THE PREVIOUS PDF CUTTING PROBLEM
+========================================================= */
+
+@page {
+    size: A4 landscape;
+    margin: 5mm;
+}
+
+
+@media print {
+
+    html,
+    body {
+        width: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+    }
+
+    .main-container {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+    }
+
+    .sheet {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    /* Hide buttons completely */
+    .control-area,
+    #statusMessage {
+        display: none !important;
+    }
+
+    .school-header {
+        padding-bottom: 7px !important;
+        border-bottom: 2px solid #0d6efd !important;
+    }
+
+    .school-name {
+        font-size: 27px !important;
+        letter-spacing: 2px !important;
+    }
+
+    .school-address {
+        font-size: 10px !important;
+    }
+
+    .exam-title {
+        margin-top: 6px !important;
+        padding: 5px 15px !important;
+        font-size: 13px !important;
+    }
+
+    .meta-row {
+        margin-top: 7px !important;
+        font-size: 10px !important;
+    }
+
+    .table-container {
+        width: 100% !important;
+        overflow: visible !important;
+        margin-top: 8px !important;
+        border: 1px solid #000 !important;
+    }
+
+    .marks-table {
+        width: 100% !important;
+        min-width: 0 !important;
+        table-layout: fixed !important;
+    }
+
+    .marks-table th,
+    .marks-table td {
+        border: 1px solid #000 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .subject-header {
+        height: 27px !important;
+        font-size: 9px !important;
+    }
+
+    .sub-header {
+        height: 21px !important;
+        font-size: 8px !important;
+    }
+
+    .roll-number {
+        height: 27px !important;
+        font-size: 9px !important;
+    }
+
+    .marks-input,
+    .total-input {
+        height: 27px !important;
+        font-size: 9px !important;
+        padding: 0 !important;
+    }
+
+    .optional-header,
+    .optional-cell {
+        background: #fff3cd !important;
+    }
+
+    .total-cell,
+    .total-input {
+        background: #e8f5e9 !important;
+    }
+
+    .marks-input {
+        color: #000 !important;
+    }
+
+    .total-input {
+        color: #146c43 !important;
+    }
+
+    /*
+       Prevent rows from splitting
+    */
+    tr {
+        page-break-inside: avoid !important;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="main-container">
+
+<div class="sheet" id="marksheet">
+
+
+<!-- =====================================================
+     HEADER
+====================================================== -->
+
+<div class="school-header">
+
+    <div class="school-name">
+        DVM PUBLIC SCHOOL
+    </div>
+
+    <div class="school-address">
+        By Pass Road, Pakwalia Dhala, Kandhwara Siwan 841226
+    </div>
+
+    <div class="exam-title">
+        Half yearly Examination 2027-28
+    </div>
+
+    <div class="meta-row">
+
+        <span>
+            Duration :- 3 Hours
+        </span>
+
+        <span>
+            FM.:- 80 Marks
+        </span>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     MARKS TABLE
+====================================================== -->
+
+<div class="table-container">
+
+<table class="marks-table">
+
+<thead>
+
+<tr>
+
+<th rowspan="2"
+    class="roll-header">
+    ROLL NO.
+</th>
+
+
+<th colspan="3"
+    class="subject-header">
+    ENGLISH
+</th>
+
+
+<th colspan="3"
+    class="subject-header">
+    HINDI
+</th>
+
+
+<th colspan="3"
+    class="subject-header">
+    MATHS
+</th>
+
+
+<th colspan="3"
+    class="subject-header">
+    SCIENCE
+</th>
+
+
+<th colspan="3"
+    class="subject-header">
+    SOCIAL SCIENCE
+</th>
+
+
+<th colspan="3"
+    class="subject-header optional-header">
+    SANSKRIT
+</th>
+
+
+<th colspan="3"
+    class="subject-header optional-header">
+    URDU
+</th>
+
+
+<th colspan="3"
+    class="subject-header">
+    COMPUTER
+</th>
+
+</tr>
+
+
+<tr>
+
+<th class="sub-header">/80</th>
+<th class="sub-header">/20</th>
+<th class="sub-header">TOTAL</th>
+
+<th class="sub-header">/80</th>
+<th class="sub-header">/20</th>
+<th class="sub-header">TOTAL</th>
+
+<th class="sub-header">/80</th>
+<th class="sub-header">/20</th>
+<th class="sub-header">TOTAL</th>
+
+<th class="sub-header">/80</th>
+<th class="sub-header">/20</th>
+<th class="sub-header">TOTAL</th>
+
+<th class="sub-header">/80</th>
+<th class="sub-header">/20</th>
+<th class="sub-header">TOTAL</th>
+
+<th class="sub-header optional-header">/80</th>
+<th class="sub-header optional-header">/20</th>
+<th class="sub-header optional-header">TOTAL</th>
+
+<th class="sub-header optional-header">/80</th>
+<th class="sub-header optional-header">/20</th>
+<th class="sub-header optional-header">TOTAL</th>
+
+<th class="sub-header">/80</th>
+<th class="sub-header">/20</th>
+<th class="sub-header">TOTAL</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="studentRows"></tbody>
+
+
+</table>
+
+</div>
+
+
+<!-- =====================================================
+     BUTTONS
+====================================================== -->
+
+<div class="control-area">
+
+<div class="student-counter">
+
+    Total Students:
+    <span id="studentCount">0</span>
+
+</div>
+
+
+<div class="button-group">
+
+<button
+    type="button"
+    class="button add-button"
+    onclick="addStudentRow()">
+
+    + Add Row
+
+</button>
+
+
+<button
+    type="button"
+    class="button pdf-button"
+    onclick="downloadPDF()">
+
+    🖨 Download PDF
+
+</button>
+
+
+<button
+    type="button"
+    class="button email-button"
+    id="sendEmailButton"
+    onclick="sendPDFByEmail()">
+
+    📧 Send Email
+
+</button>
+
+</div>
+
+</div>
+
+
+<div id="statusMessage"></div>
+
+
+</div>
+
+</div>
+
+
+
+<script>
+
+
+/* ============================================================
+   GOOGLE APPS SCRIPT
+   ALREADY CONNECTED
+============================================================ */
+
+
+const GOOGLE_SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbz4h_iaFZEwBEWRNMbqm0knbIAGX3zwWFqvCoPPFmdFkRoGnGWbfXG2zQ0Vg9PCU2d6/exec";
+
+
+/* ============================================================
+   EMAIL ADDRESS
+============================================================ */
+
+const EMAIL_ADDRESS =
+"prasatprakash41@gmail.com";
+
+
+/* ============================================================
+   SUBJECTS
+============================================================ */
+
+const subjects = [
+
+    {
+        name: "English",
+        optional: false
+    },
+
+    {
+        name: "Hindi",
+        optional: false
+    },
+
+    {
+        name: "Maths",
+        optional: false
+    },
+
+    {
+        name: "Science",
+        optional: false
+    },
+
+    {
+        name: "Social Science",
+        optional: false
+    },
+
+    {
+        name: "Sanskrit",
+        optional: true
+    },
+
+    {
+        name: "Urdu",
+        optional: true
+    },
+
+    {
+        name: "Computer",
+        optional: false
+    }
+
+];
+
+
+let nextRollNumber = 1;
+
+
+/* ============================================================
+   CREATE INPUT
+============================================================ */
+
+function createMarksInput(
+    type,
+    subjectIndex
+) {
+
+    const input =
+        document.createElement("input");
+
+    input.type = "number";
+
+    input.className =
+        "marks-input";
+
+    input.min = "0";
+
+    input.max =
+        type === "theory"
+        ? "80"
+        : "20";
+
+    input.step = "1";
+
+    input.placeholder = "0";
+
+    input.autocomplete = "off";
+
+
+    input.addEventListener(
+        "input",
+        function() {
+
+            let value =
+                Number(this.value);
+
+            const maximum =
+                type === "theory"
+                ? 80
+                : 20;
+
+
+            if (value > maximum) {
+                this.value = maximum;
+            }
+
+
+            if (value < 0) {
+                this.value = 0;
+            }
+
+
+            calculateSubjectTotal(
+                this,
+                subjectIndex
+            );
+
+        }
+    );
+
+
+    return input;
+}
+
+
+/* ============================================================
+   CALCULATE TOTAL
+============================================================ */
+
+function calculateSubjectTotal(
+    input,
+    subjectIndex
+) {
+
+    const row =
+        input.closest("tr");
+
+
+    const theoryInputs =
+        row.querySelectorAll(
+            ".theory-input"
+        );
+
+
+    const internalInputs =
+        row.querySelectorAll(
+            ".internal-input"
+        );
+
+
+    const totalInputs =
+        row.querySelectorAll(
+            ".subject-total"
+        );
+
+
+    const theory =
+        Number(
+            theoryInputs[
+                subjectIndex
+            ].value
+        ) || 0;
+
+
+    const internal =
+        Number(
+            internalInputs[
+                subjectIndex
+            ].value
+        ) || 0;
+
+
+    totalInputs[
+        subjectIndex
+    ].value =
+        theory + internal;
+
+}
+
+
+/* ============================================================
+   ADD STUDENT ROW
+============================================================ */
+
+function addStudentRow() {
+
+    const tbody =
+        document.getElementById(
+            "studentRows"
+        );
+
+
+    const row =
+        document.createElement("tr");
+
+
+    /* ROLL NUMBER */
+
+    const rollCell =
+        document.createElement("td");
+
+    rollCell.className =
+        "roll-number";
+
+    rollCell.textContent =
+        nextRollNumber;
+
+    row.appendChild(
+        rollCell
+    );
+
+
+    /* SUBJECTS */
+
+    subjects.forEach(
+        function(subject, index) {
+
+
+            /* THEORY /80 */
+
+            const theoryCell =
+                document.createElement("td");
+
+
+            if (subject.optional) {
+
+                theoryCell.className =
+                    "optional-cell";
+
+            }
+
+
+            const theoryInput =
+                createMarksInput(
+                    "theory",
+                    index
+                );
+
+
+            theoryInput.classList.add(
+                "theory-input"
+            );
+
+
+            theoryCell.appendChild(
+                theoryInput
+            );
+
+
+            row.appendChild(
+                theoryCell
+            );
+
+
+            /* INTERNAL /20 */
+
+            const internalCell =
+                document.createElement("td");
+
+
+            if (subject.optional) {
+
+                internalCell.className =
+                    "optional-cell";
+
+            }
+
+
+            const internalInput =
+                createMarksInput(
+                    "internal",
+                    index
+                );
+
+
+            internalInput.classList.add(
+                "internal-input"
+            );
+
+
+            internalCell.appendChild(
+                internalInput
+            );
+
+
+            row.appendChild(
+                internalCell
+            );
+
+
+            /* TOTAL */
+
+            const totalCell =
+                document.createElement("td");
+
+
+            totalCell.className =
+                "total-cell";
+
+
+            if (subject.optional) {
+
+                totalCell.classList.add(
+                    "optional-cell"
+                );
+
+            }
+
+
+            const totalInput =
+                document.createElement(
+                    "input"
+                );
+
+
+            totalInput.type =
+                "text";
+
+            totalInput.readOnly =
+                true;
+
+            totalInput.value =
+                "0";
+
+            totalInput.className =
+                "total-input subject-total";
+
+
+            totalCell.appendChild(
+                totalInput
+            );
+
+
+            row.appendChild(
+                totalCell
+            );
+
+        }
+    );
+
+
+    tbody.appendChild(
+        row
+    );
+
+
+    nextRollNumber++;
+
+
+    updateStudentCounter();
+
+}
+
+
+/* ============================================================
+   STUDENT COUNT
+============================================================ */
+
+function updateStudentCounter() {
+
+    const count =
+        document.querySelectorAll(
+            "#studentRows tr"
+        ).length;
+
+
+    document.getElementById(
+        "studentCount"
+    ).textContent =
+        count;
+
+}
+
+
+/* ============================================================
+   DOWNLOAD PDF
+   IMPORTANT:
+   Uses browser PRINT instead of html2canvas.
+   This fixes the previous cut-off problem.
+============================================================ */
+
+function downloadPDF() {
+
+    window.print();
+
+}
+
+
+/* ============================================================
+   CREATE EMAIL PDF
+============================================================ */
+
+async function createEmailPDF() {
+
+    const element =
+        document.getElementById(
+            "marksheet"
+        );
+
+
+    const canvas =
+        await html2canvas(
+            element,
+            {
+                scale: 1.5,
+                backgroundColor: "#ffffff",
+                useCORS: true,
+                scrollX: 0,
+                scrollY: 0,
+                windowWidth: element.scrollWidth
+            }
+        );
+
+
+    const {
+        jsPDF
+    } = window.jspdf;
+
+
+    const pdf =
+        new jsPDF(
+            "l",
+            "mm",
+            "a4"
+        );
+
+
+    const pageWidth =
+        pdf.internal.pageSize.getWidth();
+
+
+    const pageHeight =
+        pdf.internal.pageSize.getHeight();
+
+
+    const margin = 4;
+
+
+    const availableWidth =
+        pageWidth - margin * 2;
+
+
+    const availableHeight =
+        pageHeight - margin * 2;
+
+
+    const ratio =
+        Math.min(
+            availableWidth / canvas.width,
+            availableHeight / canvas.height
+        );
+
+
+    const imageWidth =
+        canvas.width * ratio;
+
+
+    const imageHeight =
+        canvas.height * ratio;
+
+
+    const x =
+        (pageWidth - imageWidth) / 2;
+
+
+    const y =
+        (pageHeight - imageHeight) / 2;
+
+
+    const image =
+        canvas.toDataURL(
+            "image/jpeg",
+            0.82
+        );
+
+
+    pdf.addImage(
+        image,
+        "JPEG",
+        x,
+        y,
+        imageWidth,
+        imageHeight
+    );
+
+
+    return pdf;
+
+}
+
+
+/* ============================================================
+   SEND PDF DIRECTLY TO EMAIL
+============================================================ */
+
+async function sendPDFByEmail() {
+
+    const button =
+        document.getElementById(
+            "sendEmailButton"
+        );
+
+
+    try {
+
+        button.disabled =
+            true;
+
+
+        button.textContent =
+            "⏳ Sending...";
+
+
+        setStatus(
+            "PDF तैयार हो रहा है...",
+            "#0d6efd"
+        );
+
+
+        const pdf =
+            await createEmailPDF();
+
+
+        const dataURI =
+            pdf.output(
+                "datauristring"
+            );
+
+
+        const pdfBase64 =
+            dataURI.split(",")[1];
+
+
+        setStatus(
+            "PDF email पर भेजा जा रहा है...",
+            "#0d6efd"
+        );
+
+
+        /*
+         * Send PDF to Google Apps Script.
+         */
+
+        await fetch(
+            GOOGLE_SCRIPT_URL,
+            {
+
+                method: "POST",
+
+                mode: "no-cors",
+
+                headers: {
+                    "Content-Type":
+                        "text/plain;charset=utf-8"
+                },
+
+                body: JSON.stringify({
+
+                    pdfBase64:
+                        pdfBase64
+
+                })
+
+            }
+        );
+
+
+        setStatus(
+            "✅ PDF भेजने की request successfully भेज दी गई।",
+            "#198754"
+        );
+
+
+        alert(
+            "✅ PDF भेज दिया गया!\n\n" +
+            "To: " +
+            EMAIL_ADDRESS
+        );
+
+
+    }
+    catch(error) {
+
+        console.error(error);
+
+
+        setStatus(
+            "❌ Email भेजने में समस्या हुई।",
+            "#dc3545"
+        );
+
+
+        alert(
+            "❌ Email भेजने में समस्या हुई.\n\n" +
+            error.message
+        );
+
+    }
+    finally {
+
+        button.disabled =
+            false;
+
+
+        button.textContent =
+            "📧 Send Email";
+
+    }
+
+}
+
+
+/* ============================================================
+   STATUS
+============================================================ */
+
+function setStatus(
+    message,
+    color
+) {
+
+    const status =
+        document.getElementById(
+            "statusMessage"
+        );
+
+
+    status.textContent =
+        message;
+
+
+    status.style.color =
+        color;
+
+}
+
+
+/* ============================================================
+   FIRST ROW
+============================================================ */
+
+window.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        addStudentRow();
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>
+f
